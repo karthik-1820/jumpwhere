@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>English Dictionary</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .dictionary-card {
+            max-width: 700px;
+            margin: 50px auto;
+            padding: 30px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .search-bar {
+            display: flex;
+        }
+        .search-bar input {
+            border-radius: 8px 0 0 8px;
+        }
+        .search-bar button {
+            border-radius: 0 8px 8px 0;
+        }
+        .result-section {
+            margin-top: 20px;
+        }
+        h3 {
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="dictionary-card">
+            <h2 class="text-center mb-4">English Dictionary</h2>
+
+            <form method="POST" class="mb-4">
+                {% csrf_token %}
+                <div class="search-bar">
+                    <input type="text" name="word" class="form-control" placeholder="Enter a word..." required>
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </form>
+
+            {% if word %}
+                <div class="result-section">
+                    <h3>Word: {{ word }}</h3>
+
+                    {% if meaning %}
+                        <h5>Meaning:</h5>
+                        <ul>
+                            {% for m in meaning %}
+                                <li>
+                                    <b>{{ m.part_of_speech }}</b>:
+                                    <ul>
+                                        {% for d in m.definitions %}
+                                            <li>{{ d }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+
+                    {% if synonyms %}
+                        <h5>Synonyms:</h5>
+                        <p>{{ synonyms|join:", " }}</p>
+                    {% endif %}
+
+                    {% if antonyms %}
+                        <h5>Antonyms:</h5>
+                        <p>{{ antonyms|join:", " }}</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            {% if error %}
+                <p class="text-danger">{{ error }}</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
